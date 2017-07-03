@@ -1,32 +1,33 @@
 <div class="container">
-	<h3>Books List</h3>
+	<h4>Book List</h4>
 	<div align="right">
-		<button class="btn waves-effect waves-light" type="submit"
-			name="action">
+		<a class="waves-effect waves-light modal-trigger btn" href="#modal1"  (click)="openModal()" >
 			Add New Book <i class="material-icons right">add</i>
-		</button>
+		</a>
 	</div>
-	<ul class="collection">
-		<li class="collection-item ">
+	
+	<ul class="collection" >
+		<li class="collection-item" *ngFor="let book of listOfBooks;">
+			<div align="center"><h5>{{ emptyList }}</h5></div>
 			<div class="card horizontal">
 				<div class="card-image">
-					<img [src] = "this.src1" />
+					<img [src] = "book.photoUrl" class="responsive-img">
 				</div>
 				<div class="card-stacked">
 					<div class="card-content">
 						<span class="card-title activator grey-text text-darken-4"><strong>
-						{{ book1.title }}</strong></span>
+						{{ book.title }}</strong></span>
 						<p>
-							{{ book1.author }} <br> 1999
+							{{ book.authors }} <br> {{ book.releasedDate }}
 						</p>
 						<br>
-						<p>{{ book1.synopses }}</p>
+						<p>{{ book.description }}</p>
 					</div>
 					<div class="card-action">
 						<div align="right">
 							<a class="btn-floating waves-effect waves-light blue"><i
-								class="material-icons">edit</i></a> <a
-								class="btn-floating waves-effect waves-light red"><i
+								class="material-icons" (click)="editBook(book)">edit</i></a> 
+							<a class="btn-floating waves-effect waves-light red" (click)="deleteBook(book)"><i
 								class="material-icons">delete</i></a>
 						</div>
 					</div>
@@ -40,98 +41,74 @@
 					<span class="card-title grey-text text-darken-4">Comment<i
 						class="material-icons right">close</i></span>
 					<ul>
-						<li>
-							<p>Here is some more information about this product that is
-								only revealed once clicked on.</p>
+						<li *ngFor="let comment of book.comments;">
+							<blockquote>
+								<h5>{{ comment.name }}</h5>
+								<p>{{ comment.review }}</p>
+							</blockquote>
 						</li>
 					</ul>
-
-					<div class="input-field col s12">
-						<textarea id="textarea1" class="materialize-textarea"></textarea>
-						<label for="textarea1">Textarea</label>
-						<button class="btn waves-effect waves-light" type="submit"
-							name="action">
-							Comment <i class="material-icons right">send</i>
-						</button>
-					</div>
-				</div>
-			</div>
-		</li>
-		<li class="collection-item">
-		<div class="card horizontal">
-				<div class="card-image">
-					<img [src] = "this.src2">
-				</div>
-				<div class="card-stacked">
-					<div class="card-content">
-						<span class="card-title activator grey-text text-darken-4"><strong>
-						{{ book2.title }}</strong></span>
-						<p>
-							{{ book2.author }} <br> 2005
-						</p>
-						<br>
-						<p>{{ book2.synopses }}</p>
-					</div>
-					<div class="card-action">
-						<div align="right">
-							<a class="btn-floating waves-effect waves-light blue"><i
-								class="material-icons">edit</i></a> <a
-								class="btn-floating waves-effect waves-light red"><i
-								class="material-icons">delete</i></a>
+					<br>
+						<div class="input-field col s12">
+							<div class="input-field">
+								<input #commentName (keyup.enter)="addComment(commentName.value)" type="text" class="validate">
+		          				<label for="commentName">Title</label>
+	          				</div>
+	          				<div class="input-field">
+								<textarea class="validate" id="commentReview" class="materialize-textarea" #commentReview></textarea>
+								<label for="commentReview">Comment this book</label>
+							</div>
+							<button class="btn waves-effect" type="button" (click)="addComment(book, commentReview, commentName)"
+								name="btn-comment">
+								Comment <i class="material-icons right">send</i>
+							</button>
 						</div>
-					</div>
-				</div>
-				<div class="card-content">
-					<span class="card-title activator grey-text text-darken-4"><i
-						class="material-icons right">comment</i></span>
-
-				</div>
-				<div class="card-reveal">
-					<span class="card-title grey-text text-darken-4">Comment<i
-						class="material-icons right">close</i></span>
-					<ul>
-						<li>
-						<blockquote id="comments">
-							<p>Here is some more information about this product that is
-								only revealed once clicked on.</p>
-						</blockquote>
-							
-						</li>
-					</ul>
-
-					<div class="input-field col s12">
-						<textarea id="textarea1" class="materialize-textarea"></textarea>
-						<label for="textarea1">Textarea</label>
-						<button class="btn waves-effect waves-light" type="submit"
-							name="action">
-							Comment <i class="material-icons right">send</i>
-						</button>
-					</div>
 				</div>
 			</div>
 		</li>
 	</ul>
-
-	<!-- Modal Structure -->
-	<div id="modal1" class="modal">
+	<div id="modal1" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
 		<div class="modal-content">
-			<h4>Comments</h4>
-			<ul class="collection" id="comment-list">
-				<li class="collection-item">
-					
-				</li>
-			</ul>
-			<textarea id="textarea1" class="materialize-textarea"
-				placeholder="Write a Comment"></textarea>
-			<label for="textarea1">Write a Comment</label>
-			<button class="btn waves-effect waves-light" type="submit"
-				name="action">
-				Comment <i class="material-icons right">send</i>
-			</button>
-		</div>
-		<div class="modal-footer">
-			<a href="#!"
-				class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+			<h4>{{ modalTitle }}</h4> <br>
+			<form method="POST" class="col s12">
+			 	<div class="row">
+					<div class="input-field">
+						<input type="text" [ngModel]="book.title" class="validate" id="book-title" #bookTitle/> 
+						<label for="book-name">Title</label>
+					</div>
+					<div class="input-field" >
+						<textarea class="validate materialize-textarea" [ngModel]="book.description" id="book-description" #bookDescription></textarea>
+						<label for="book-description">Description</label>
+					</div>
+				
+					<div class="input-field col s6">
+						<input type="text" [ngModel]="book.releasedDate" class="validate" id="book-date" #bookReleastedDate/> 
+						<label for="book-date">Date</label>
+					</div>
+					<div class="input-field col s6">
+						<input type="text" [ngModel]="book.authors" class="validate" id="book-author" #bookAuthor/> 
+						<label for="book-author">Author</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field">
+						<input type="text" [ngModel]="book.isbn" class="validate" id="book-isbn" #bookIsbn/> 
+						<label for="book-isbn">ISBN</label>
+					</div>
+					<div class="input-field">
+						<input type="text" [ngModel]="book.photoUrl" class="validate" id="book-image-url" #bookImageUrl/> 
+						<label for="book-image-url">Image URL</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="modal-action modal-close waves-effect waves-green btn"
+						(click)="addBook(bookTitle, bookDescription, bookReleastedDate, bookAuthor, bookIsbn, bookImageUrl)">
+						<i class="material-icons right">send</i>Submit
+					</button>
+					<a (click)="closeModal()"
+						class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

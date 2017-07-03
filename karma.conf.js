@@ -2,6 +2,7 @@
 // https://karma-runner.github.io/0.13/config/configuration-file.html
 
 module.exports = function (config) {
+  const ProvidePlugin = require('webpack/lib/ProvidePlugin');
   config.set({
     basePath: '',
     frameworks: ['jasmine', 'angular-cli'],
@@ -9,7 +10,11 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-remap-istanbul'),
-      require('angular-cli/plugins/karma')
+      require('angular-cli/plugins/karma'),
+      new ProvidePlugin({
+          "window.jQuery": "jquery",
+          Hammer: "hammerjs/hammer"
+      })
     ],
     files: [
       { pattern: './src/test.ts', watched: false }
