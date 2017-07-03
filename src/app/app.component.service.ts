@@ -4,6 +4,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { Book } from './app.component.js';
 import { Comment } from './app.component.js';
+import 'rxjs/Rx';
 
 @Injectable()
 export class AppComponentService {
@@ -12,7 +13,7 @@ export class AppComponentService {
   constructor(private http: Http) { }
 
   listAll() {
-    return this.http.get('api/books')
+    return this.http.get(this.url)
       .map( (res: Response) => {
           return res.json();
       });
@@ -29,7 +30,7 @@ export class AppComponentService {
   }//
 
   del(id: number): Observable<any> {
-      return this.http.delete('api/add' + id)
+      return this.http.delete(this.url + id)
         .map((res: Response) => {
           return res.json();
         }).catch(this.handleErrorPromise);

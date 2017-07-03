@@ -16,8 +16,9 @@ export class AppComponent {
 
   public listOfBooks: Book[];
   public modalTitle = 'New Book';
-  public emptyList = '';
+  public emptyList = 'Your List of Books is Empty! :(';
   book =   new Book();
+  authors: string[];
 
   modalActions = new EventEmitter<string | MaterializeAction>();
   openModal() {
@@ -59,15 +60,19 @@ export class AppComponent {
 
     if (bookTitle.value !== '' && bookDescription.value !== '' && bookReleastedDate.value !== '' && bookAuthor.value !== ''
       && bookIsbn.value !== '' && bookImageUrl.value !== '') {
-
-        this.bookService.add(this.book).then( book => {
-            this.book.description = book.description;
-            this.book.authors = book.authors;
-            this.book.isbn = book.isbn;
-            this.book.photoUrl = book.photoUrl;
-            this.book.releasedDate = book.releasedDate;
-            this.book.title = book.title;
-        });
+        
+        this.authors = bookAuthor.value.split(',');
+        
+        for(let a of this.authors){
+            this.book.authors.push(new Author(a));  
+        };
+        //
+        this.book.title = bookTitle.value;
+        this.book.description = bookDescription.value;
+        this.book.photoUrl = bookImageUrl.value;
+        this.book.releasedDate = bookReleastedDate.value;
+        this.bookService.add(this.book);
+        this.bookService.listAll();
         ApplicationRef.apply('ul');
     }
   };
@@ -165,11 +170,24 @@ export class Book {
   }
 }
 
-class Author {
+export class Author {
 
   private id: number;
-  private name: String;
+  private _name: String;
   private books: Book[] = [];
+    
+  constructor(name){
+      this._name = name;
+  }
+  
+  set name(name: String){
+       this._name = name;
+  }
+    
+  get name(): String {
+      return this._name;
+  }
+  
 
 }
 
