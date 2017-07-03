@@ -12,11 +12,9 @@ export class AppComponentService {
 
   listAll() {
     return this.http.get('api/books')
-      .map(
-      (res: Response) => {
-        return res.json();
-      }
-      );
+      .map( (res: Response) => {
+          return res.json();
+      });
   }
 
   add(book: Book): Promise<Book> {

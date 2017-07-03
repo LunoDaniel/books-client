@@ -73,12 +73,14 @@ export class AppComponent {
 
   editBook(book: Book) {
     this.modalTitle = 'Editing a Book';
+    this.bookService.update(book);
     this.openModal();
   }
 
   deleteBook(book: Book) {
     const index: number = this.listOfBooks.indexOf(book);
     if (index !== -1) {
+       this.bookService.del(book.id);
        this.listOfBooks.splice(index, 1);
     }
   }
@@ -87,6 +89,7 @@ export class AppComponent {
 
 export class Book {
 
+  private _id: number;
   private _photoUrl: String;
   private _title: String;
   private _author: String;
@@ -97,6 +100,13 @@ export class Book {
   private _comments: Comment[] = [];
 
 
+  set id(id: number){
+    this._id = id;
+  }
+
+  get id(){
+    return this._id;
+  }
   set photoUrl(photoUrl: String) {
     this._photoUrl = photoUrl;
   }
