@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { Book } from './app.component.js';
+import { Comment } from './app.component.js';
 
 @Injectable()
 export class AppComponentService {
@@ -25,7 +26,7 @@ export class AppComponentService {
     return this.http.post(this.url, book, options).toPromise()
       .then(this.extractData)
       .catch(this.handleErrorPromise);
-  }
+  }//
 
   del(id: number): Observable<any> {
       return this.http.delete('api/add' + id)
@@ -39,7 +40,7 @@ export class AppComponentService {
       const headers = new Headers({ 'Content-Type': 'application/json' });
       const options = new RequestOptions({ headers: headers });
 
-      return this.http.put('localhost:8080/books/api/Cadastre/DocumentType', body, options)
+      return this.http.put(this.url, body, options)
           .map((res: Response) => res.json())
           .catch(this.handleErrorPromise);
   }

@@ -48,6 +48,7 @@ export class AppComponent {
   addComment(book, commentName: HTMLInputElement, review: HTMLInputElement) {
     if (book != null && review.value !== '' && commentName.value !== '') {
       book.comments.push(new Comment(review.value, commentName.value));
+      this.bookService.add(book);
       commentName.value = null;
       review.value = null;
     }
@@ -172,7 +173,7 @@ class Author {
 
 }
 
-class Comment {
+export class Comment {
   private id: number;
   private name: String;
   private review: String;
