@@ -20,9 +20,10 @@
 					<div class="card-content">
 						<span class="card-title activator grey-text text-darken-4"><strong>
 						{{ book.title }}</strong></span>
-						<p>
-							{{ book.authors }} <br> {{ book.releasedDate }}
+						<p *ngFor="let author of book.authors" >
+							{{ author.name }} <br> 
 						</p>
+						<p>{{ book.releasedDate }}</p> <br>
 						<br>
 						<p>{{ book.description }}</p>
 					</div>
